@@ -1,9 +1,22 @@
 pipeline{
     agent any
     stages {
-        stage('Without docker') {
+        stage('Build') {
+            agent{
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
             steps {
-                echo 'Lets see if its actually happening'
+                sh '''
+                    ls -la
+                    node -v
+                    npm -v
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
             }
         }
     }
